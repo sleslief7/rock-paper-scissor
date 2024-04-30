@@ -22,7 +22,7 @@ const getComputerChoice = () => {
 const getHumanChoice = () => {
     let humanSelection = prompt('Choose rock, paper or scissor').trim().toLowerCase();
 
-    while(isValid(humanSelection)) {
+    while(isNotValid(humanSelection)) {
         humanSelection = prompt('Please enter of the following valid answers: rock, paper or scissor').trim().toLowerCase();
     }
     if(humanSelection === 'rock' || humanSelection === 'paper' || humanSelection === 'scissor'){
