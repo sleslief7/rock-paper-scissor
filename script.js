@@ -5,5 +5,5 @@ const getComputerChoice = () => {
 }
 
 const getHumanChoice = () => {
-    let humanChoice = prompt('Choose rock, papper or scissor');
+    let humanChoice = prompt('Choose rock, paper or scissor');
 }
