@@ -1,7 +1,14 @@
 let choices = ['rock', 'paper', 'scissor'];
+let playingBtns = document.querySelector('.playingBtns');
+let currentRound = document.querySelector('#currentRound');
+let player = document.querySelector('#player');
+let computer = document.querySelector('#computer');
+let Roundresult = document.querySelector('#Roundresult');
+let result = document.querySelector('#result');
 let humanScore = 0;
 let computerScore = 0;
-let rounds = 5;
+let round = 0;
+
 const winCombs = {
     rock: "scissor",
     paper: "rock",
@@ -13,55 +20,55 @@ const isInvalid = (str) => (!str || (str !== 'rock' && str !== 'paper' && str !=
 const getComputerChoice = () => {
     let randomNumber = Math.floor(Math.random() * 3);
     let computerSelection = choices[randomNumber];
+
     return computerSelection;
 }
 
-const getHumanChoice = () => {
-    let humanSelection = prompt('Choose rock, paper or scissor').trim().toLowerCase();
-
-    while(isInvalid(humanSelection)) {
-        humanSelection = prompt('Please enter of the following valid answers: rock, paper or scissor').trim().toLowerCase();
-    }
-
-    return humanSelection;
-}
-
-const playRound = (humanChoice, computerChoice) => {
-    humanChoice = getHumanChoice();
+const playRound = (event, humanChoice, computerChoice) => {
+    result.innerHTML = ``;
+    let target = event.target;
+    humanChoice = target.id;
     computerChoice = getComputerChoice();
+    round++;
 
     if(humanChoice === computerChoice){
-        console.log(`It's a tie!`)
+        logChoices(round, humanChoice, computerChoice);
+        Roundresult.textContent = `It's a tie!`;
     }else if(winCombs[humanChoice] === computerChoice){
-        console.log(`You win! ${humanChoice} beats ${computerChoice}`);
         humanScore++;
+        logChoices(round, humanChoice, computerChoice);
+        Roundresult.textContent = `You earned a point! ${humanChoice} beats ${computerChoice}`;
     } else {
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
         computerScore++;
+        logChoices(round, humanChoice, computerChoice);
+        Roundresult.textContent = `Computer earned a point! ${computerChoice} beats ${humanChoice}`;
+    }
+    checkWinner();
+}
+
+const logChoices = (roundValue, playerValue, computerValue) => {
+    currentRound.innerHTML = `<div> Round: ${roundValue} </div>
+    <div>Player Score: ${humanScore} </div>
+    <div>Computer Score: ${computerScore}</div>`;
+    player.textContent = `Player: ${playerValue}`;
+    computer.textContent = `Computer: ${computerValue}`;
+}
+
+const checkWinner = () => {
+    if (humanScore === 5 || computerScore === 5) {
+        let winner = humanScore === 5 ? "You" : "Computer";
+        result.innerHTML = `<strong> ${winner} Won!!</strong>`;
+        resetGame();
     }
 }
 
-const logResults = () => {
-    console.log(`
-    Your score: ${humanScore}
-    computer score: ${computerScore}
-    `);
-    if(computerScore === humanScore) {
-        console.log(`Nobody won! It's a tie!`);
-    } else if (computerScore > humanScore) {
-        console.log(`Computer won the game`);
-    } else {
-        console.log(`You won the game!`);
-    }
+const resetGame = () => {
+    humanScore = 0;
+    computerScore = 0;
+    round = 0;
+    Roundresult.innerHTML = ``;
+    player.innerHTML = ``;
+    computer.innerHTML = ``;
 }
 
-const playGame = () => {
-    for(let i = 0; i < rounds; i++){
-        console.log(`Round: ${i + 1}`);
-        playRound();
-    }
-
-    logResults();
-}
-
-playGame();
+playingBtns.addEventListener('click', playRound);
